@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { BadgePercent, ShieldCheck, Wallet, Network, ChevronsRight } from "lucide-react";
-import { DownloadRiderAppButton } from "@/components/brand/DownloadRiderAppButton";
 import { PhoneFrame } from "@/components/brand/PhoneFrame";
+import { StoreBadges } from "@/components/brand/StoreBadges";
 import { WatchVideoButton } from "@/components/sections/WatchVideoButton";
 import { HeroIntro } from "@/components/motion/HeroIntro";
 
@@ -95,10 +95,9 @@ export function RiderHero({ videoUrl }: { videoUrl?: string }) {
             </ul>
 
             <div className="hero-cta flex flex-wrap items-center gap-5">
-              <DownloadRiderAppButton />
+              <StoreBadges audience="rider" size="lg" />
               <WatchVideoButton videoUrl={videoUrl} surface="rider" />
             </div>
-            <p className="hero-cta text-xs text-alin-muted">Available on iOS and Android</p>
           </div>
         </HeroIntro>
 

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Building2, Home as HomeIcon } from "lucide-react";
 import { PoweredByACE } from "@/components/brand/ACEBadge";
-import { DownloadCustomerAppButton } from "@/components/brand/DownloadCustomerAppButton";
+import { StoreBadges } from "@/components/brand/StoreBadges";
 import { TrackPackageButton } from "@/components/brand/TrackPackageButton";
 import { PhoneFrame } from "@/components/brand/PhoneFrame";
 import { HeroIntro } from "@/components/motion/HeroIntro";
@@ -46,8 +46,8 @@ export function MultiPhoneHero() {
               pay securely, and stay updated until your package arrives.
             </p>
 
-            <div className="hero-cta flex flex-wrap gap-3">
-              <DownloadCustomerAppButton />
+            <div className="hero-cta flex flex-wrap items-center gap-3">
+              <StoreBadges audience="customer" size="lg" />
               <TrackPackageButton />
             </div>
 
