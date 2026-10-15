@@ -1,0 +1,128 @@
+/* ─────────────────────────────────────────────────────────────────────────
+ * ALiN Move — Payload admin theme overrides
+ * Imports brand tokens and re-maps Payload's --theme-* vars to ALiN values
+ * so /admin matches the marketing site (dark surfaces, gold accent, Inter).
+ * Reference: alinmove-brand skill + payload-cms-conventions skill.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+@import "../../styles/tokens.css";
+
+html[data-theme='dark'] {
+  /* Surface elevations — darkest to lightest */
+  --theme-elevation-0:    var(--alin-black);
+  --theme-elevation-50:   var(--alin-black);
+  --theme-elevation-100:  var(--alin-near-black);
+  --theme-elevation-150:  var(--alin-graphite);
+  --theme-elevation-200:  var(--alin-graphite);
+  --theme-elevation-250:  #1f222c;
+  --theme-elevation-300:  #232631;
+  --theme-elevation-400:  var(--alin-border-dark);
+  --theme-elevation-500:  #3a3d48;
+  --theme-elevation-600:  #5a5d68;
+  --theme-elevation-700:  #8a8d98;
+  --theme-elevation-800:  var(--alin-text-muted-dark);
+  --theme-elevation-900:  var(--alin-white);
+  --theme-elevation-1000: var(--alin-white);
+
+  --theme-bg:            var(--alin-black);
+  --theme-text:          var(--alin-white);
+  --theme-input-bg:      var(--alin-near-black);
+  --theme-border-color:  var(--alin-border-dark);
+
+  /* Status — keep Payload's saturated set; just sync the 500 step to ours */
+  --theme-success-500: var(--alin-success);
+  --theme-error-500:   var(--alin-danger);
+  --theme-warning-500: var(--alin-warning);
+
+  /* Font */
+  --font-body: var(--font-sans, "Inter", system-ui, sans-serif);
+
+  /* Primary button: gold fill, black text */
+  .btn--style-primary,
+  .btn--style-primary:not(:disabled) {
+    background-color: var(--alin-gold);
+    border-color: var(--alin-gold);
+    color: var(--alin-black);
+  }
+  .btn--style-primary:not(:disabled):hover {
+    background-color: var(--alin-gold-hover);
+    border-color: var(--alin-gold-hover);
+    color: var(--alin-black);
+  }
+  .btn--style-primary:not(:disabled):active {
+    background-color: var(--alin-gold-pressed);
+    border-color: var(--alin-gold-pressed);
+  }
+
+  /* Secondary / outline button: gold on hover */
+  .btn--style-secondary:not(:disabled):hover {
+    border-color: var(--alin-gold);
+    color: var(--alin-gold);
+  }
+
+  /* Focus ring — brand-consistent */
+  :focus-visible {
+    outline: 2px solid var(--alin-gold);
+    outline-offset: 2px;
+  }
+
+  /* Inputs */
+  input,
+  textarea,
+  select,
+  .rs__control {
+    background-color: var(--alin-near-black) !important;
+    border-color: var(--alin-border-dark) !important;
+    color: var(--alin-white) !important;
+  }
+  input:focus,
+  textarea:focus,
+  .rs__control--is-focused {
+    border-color: var(--alin-gold) !important;
+    box-shadow: 0 0 0 1px var(--alin-gold) !important;
+  }
+
+  /* Select / dropdown menus */
+  .rs__menu {
+    background-color: var(--alin-near-black) !important;
+    border: 1px solid var(--alin-border-dark) !important;
+  }
+  .rs__option--is-focused {
+    background-color: var(--alin-graphite) !important;
+    color: var(--alin-white) !important;
+  }
+  .rs__option--is-selected {
+    background-color: rgba(255, 192, 0, 0.12) !important;
+    color: var(--alin-gold) !important;
+  }
+
+  /* Nav active state */
+  .nav__link--active,
+  .nav__link[aria-current="page"],
+  a.nav__link.active {
+    color: var(--alin-gold) !important;
+    background-color: rgba(255, 192, 0, 0.08);
+  }
+
+  /* Login / template surfaces */
+  .template-default,
+  .template-minimal {
+    background-color: var(--alin-black);
+  }
+  .login__brand {
+    background-color: var(--alin-black);
+  }
+
+  /* Links inside admin */
+  a:not(.btn):not(.nav__link) {
+    color: var(--alin-gold);
+  }
+  a:not(.btn):not(.nav__link):hover {
+    color: var(--alin-gold-hover);
+  }
+}
+
+/* Body font (admin is dark-locked anyway) */
+body {
+  font-family: var(--font-sans, "Inter", system-ui, sans-serif);
+}

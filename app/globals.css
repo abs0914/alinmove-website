@@ -1,0 +1,139 @@
+@import "../styles/tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-alin-black font-sans text-alin-white;
+  }
+
+  ::selection {
+    background: var(--alin-gold);
+    color: var(--alin-black);
+  }
+
+  *:focus-visible {
+    @apply outline-none ring-2 ring-alin-gold ring-offset-2 ring-offset-alin-black;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .section {
+    @apply py-16 lg:py-24;
+  }
+
+  .blog-prose {
+    @apply text-base leading-relaxed text-alin-white sm:text-lg;
+  }
+  .blog-prose > * + * {
+    @apply mt-6;
+  }
+  .blog-prose h2 {
+    @apply mt-12 text-2xl font-bold text-alin-white sm:text-3xl;
+  }
+  .blog-prose h3 {
+    @apply mt-10 text-xl font-semibold text-alin-white sm:text-2xl;
+  }
+  .blog-prose h4 {
+    @apply mt-8 text-lg font-semibold text-alin-white;
+  }
+  .blog-prose p {
+    @apply text-alin-white;
+  }
+  .blog-prose a {
+    @apply text-alin-gold underline underline-offset-4;
+  }
+  .blog-prose strong {
+    @apply font-semibold text-alin-white;
+  }
+  .blog-prose ul {
+    @apply list-disc space-y-2 pl-6 marker:text-alin-gold;
+  }
+  .blog-prose ol {
+    @apply list-decimal space-y-2 pl-6 marker:text-alin-gold;
+  }
+  .blog-prose blockquote {
+    @apply border-l-4 border-alin-gold pl-6 text-alin-muted;
+  }
+  .blog-prose code {
+    @apply rounded bg-alin-near-black px-1.5 py-0.5 font-mono text-sm text-alin-gold;
+  }
+  .blog-prose hr {
+    @apply my-12 border-alin-border;
+  }
+}
+
+/* Reduced-motion: kill all animations + transitions for users who opt out
+ * (system preference OR manual footer toggle that adds [data-reduce-motion="true"]). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+[data-reduce-motion="true"] *,
+[data-reduce-motion="true"] *::before,
+[data-reduce-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+.alin-leaflet-marker {
+  background: transparent;
+  border: 0;
+}
+
+.alin-leaflet-marker__dot {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border: 3px solid #000;
+  border-radius: 9999px;
+  background: #ffc000;
+  box-shadow:
+    0 0 0 2px rgb(255 255 255 / 75%),
+    0 6px 18px rgb(0 0 0 / 45%);
+}
+
+.alin-leaflet-marker__dot.is-selected {
+  width: 30px;
+  height: 30px;
+  border-width: 5px;
+  box-shadow:
+    0 0 0 3px #fff,
+    0 0 24px rgb(255 192 0 / 85%);
+}
+
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-tooltip {
+  border: 1px solid rgb(255 192 0 / 45%);
+  background: #0f1117;
+  color: #fff;
+  font-weight: 700;
+}
+
+.leaflet-control-attribution {
+  color: #343434;
+}

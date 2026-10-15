@@ -1,0 +1,34 @@
+/* ─────────────────────────────────────────────────────────────────────────
+ * ALiN Move — design tokens (single source of truth)
+ * Mapped into Tailwind utilities via /tailwind.config.ts.
+ * NEVER reference raw hex values in JSX or CSS — always use the var.
+ * Cross-reference: alinmove-brand skill.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Brand */
+  --alin-gold: #ffc000;
+  --alin-gold-hover: #ffcc33;
+  --alin-gold-pressed: #e6ac00;
+
+  /* Surfaces */
+  --alin-black: #000000;
+  --alin-near-black: #0f1117;
+  --alin-graphite: #1a1d26;
+
+  /* Text */
+  --alin-white: #ffffff;
+  --alin-text-muted-dark: #b5b7bd;
+
+  /* Borders */
+  --alin-border-dark: #2a2d38;
+
+  /* Status */
+  --alin-success: #10b981;
+  --alin-warning: #f59e0b;
+  --alin-danger: #ef4444;
+  --alin-info: #3b82f6;
+
+  /* Type */
+  --font-sans: var(--font-inter, ui-sans-serif, system-ui, sans-serif);
+}
