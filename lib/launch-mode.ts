@@ -4,10 +4,9 @@
  *
  * Reference: CLAUDE.md rule #2.
  *
- * The site ships in **`live`** mode by default. Apps may not be in the stores
- * yet at the moment a given PR lands — the canonical CTA helper is
- * `downloadHref(audience)`, which uses the configured store URL or the
- * official ALiN Move Play Store URL by default.
+ * The site ships in **`live`** mode by default. Both apps are live on the
+ * App Store and Google Play — the canonical CTA helper is
+ * `downloadHref(audience, platform?)`, backed by the store URLs below.
  *
  * The legacy `customerPrimaryCta()` / `driverPrimaryCta()` / `storeBadgeMode()`
  * helpers are kept for backward compatibility but should not be added to new
@@ -24,31 +23,39 @@ export const isLive = () => LAUNCH_MODE === "live";
 
 export type DownloadAudience = "customer" | "rider";
 
+export type StorePlatform = "ios" | "android";
+
 export const CUSTOMER_PLAY_STORE_URL =
   process.env.NEXT_PUBLIC_PLAY_STORE_URL?.trim() ||
-  "https://play.google.com/store/apps/details?id=com.alinmove.customer&pcampaignid=web_share";
+  "https://play.google.com/store/apps/details?id=com.alinmove.customer";
 
 export const RIDER_PLAY_STORE_URL =
   process.env.NEXT_PUBLIC_PLAY_STORE_URL_RIDER?.trim() ||
-  "https://play.google.com/store/apps/details?id=com.alinmove.driver&pcampaignid=web_share";
+  "https://play.google.com/store/apps/details?id=com.alinmove.driver";
+
+export const CUSTOMER_APP_STORE_URL =
+  process.env.NEXT_PUBLIC_APP_STORE_URL?.trim() ||
+  "https://apps.apple.com/ph/app/alin-move/id6797973403";
+
+export const RIDER_APP_STORE_URL =
+  process.env.NEXT_PUBLIC_APP_STORE_URL_RIDER?.trim() ||
+  "https://apps.apple.com/ph/app/alin-move-driver/id6797973038";
+
+/** Official store listing for an app (customer = ALiN Move, rider = ALiN Move Driver). */
+export function storeUrl(audience: DownloadAudience, platform: StorePlatform): string {
+  if (platform === "ios") return audience === "rider" ? RIDER_APP_STORE_URL : CUSTOMER_APP_STORE_URL;
+  return audience === "rider" ? RIDER_PLAY_STORE_URL : CUSTOMER_PLAY_STORE_URL;
+}
 
 /**
- * Canonical CTA helper. Android and generic download actions resolve to the
- * official Play Store listing. The customer iOS action uses the App Store URL
- * when configured and otherwise falls back to the internal download page.
+ * Canonical CTA helper. Both apps ship on iOS and Android.
  *
- * Customer apps target both iOS and Android. Rider app is Android-only at
- * launch. Generic download buttons use the corresponding Android listing.
+ * With a platform (store badges) it returns that store's listing. Without one
+ * (generic "Download" buttons) it returns `/download`, which redirects phones
+ * to the matching store by user-agent and shows both badges on desktop.
  */
-export function downloadHref(audience: DownloadAudience, platform?: "ios" | "android"): string {
-  const ios = process.env.NEXT_PUBLIC_APP_STORE_URL;
-  const android = audience === "rider" ? RIDER_PLAY_STORE_URL : CUSTOMER_PLAY_STORE_URL;
-
-  if (platform === "ios" && ios && audience === "customer") return ios;
-  if (platform === "android") return android;
-
-  if (!platform) return android;
-
+export function downloadHref(audience: DownloadAudience, platform?: StorePlatform): string {
+  if (platform) return storeUrl(audience, platform);
   return audience === "rider" ? "/download?intent=rider" : "/download";
 }
 

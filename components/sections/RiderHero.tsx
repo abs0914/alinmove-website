@@ -98,7 +98,7 @@ export function RiderHero({ videoUrl }: { videoUrl?: string }) {
               <DownloadRiderAppButton />
               <WatchVideoButton videoUrl={videoUrl} surface="rider" />
             </div>
-            <p className="hero-cta text-xs text-alin-muted">Available on Android</p>
+            <p className="hero-cta text-xs text-alin-muted">Available on iOS and Android</p>
           </div>
         </HeroIntro>
 

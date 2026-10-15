@@ -236,7 +236,7 @@ export default function DrivePage() {
             <div className="mt-6">
               <DownloadRiderAppButton />
             </div>
-            <p className="mt-4 text-xs text-alin-muted">Available on Android.</p>
+            <p className="mt-4 text-xs text-alin-muted">Available on iOS and Android.</p>
           </div>
         </div>
       </section>
