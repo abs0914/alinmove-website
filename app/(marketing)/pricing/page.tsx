@@ -31,6 +31,13 @@ import { PricingCalculators } from "@/components/sections/PricingCalculators";
 import { Button } from "@/components/ui/button";
 import { buildMetadata } from "@/lib/seo";
 import { downloadHref } from "@/lib/launch-mode";
+import {
+  BASE_DISTANCE_KM,
+  FARE_TIERS,
+  STARTING_FARE,
+  VEHICLE_RATES,
+  formatPeso,
+} from "@/lib/pricing-calculator";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = buildMetadata({
@@ -43,8 +50,8 @@ export const metadata: Metadata = buildMetadata({
 const pricingCards = [
   {
     title: "Door-to-Door Delivery",
-    price: "Starts at ₱70",
-    subprice: "within 5 km",
+    price: null,
+    subprice: "within 5 km · motorcycle",
     description:
       "Best for direct local delivery from your pickup location to your recipient's address.",
     includes: [
@@ -61,8 +68,8 @@ const pricingCards = [
   },
   {
     title: "Pickup to ALiN Branch",
-    price: "Starts at ₱70",
-    subprice: "within 5 km",
+    price: null,
+    subprice: "within 5 km · motorcycle",
     description:
       "Best when you want your package picked up and brought to an ALiN Cargo Express branch for processing or onward shipment.",
     includes: [
@@ -78,7 +85,7 @@ const pricingCards = [
   },
   {
     title: "Business Delivery",
-    price: "Custom pricing",
+    price: "Custom pricing" as string | null,
     subprice: "for repeat or bulk needs",
     description:
       "For online sellers, SMEs, stores, distributors, and branch-based businesses that need recurring delivery support.",
@@ -95,14 +102,14 @@ const pricingCards = [
   },
 ];
 
-const rateRows = [
-  ["Motorcycle", "₱70", "₱7/km"],
-  ["Sedan / Car", "₱115", "₱16–₱17/km"],
-  ["MPV / Small Van", "₱245", "₱18–₱19/km"],
-  ["Closed Van / L300 / Light Truck", "₱345", "₱21–₱22/km"],
-  ["Medium 4-Wheel / 6-Wheel Truck", "₱550–₱750", "₱25–₱30/km"],
-  ["Large 10-Wheel / Long-Haul Truck", "₱900–₱1,200", "₱30–₱40/km"],
-];
+const rateRows = VEHICLE_RATES.map((rate) => [
+  rate.label,
+  `${rate.maxWeightKg.toLocaleString("en-PH")} kg`,
+  rate.size,
+  formatPeso(rate.baseFare.saver),
+  formatPeso(rate.baseFare.priority),
+  `${formatPeso(rate.perKm)}/km`,
+]);
 
 const serviceTypes = [
   {
@@ -193,7 +200,7 @@ const trustCards = [
 const faqs = [
   {
     q: "How much is ALiN Move delivery?",
-    a: "Door-to-door delivery and pickup to an ALiN Branch start at ₱70 for a motorcycle, with rates based on the vehicle tier and additional distance. Final pricing is shown in the app before booking.",
+    a: "Door-to-door delivery and pickup to an ALiN Branch start at ₱35 with Saver (scheduled) or ₱70 with Priority (immediate dispatch) for a motorcycle within 5 km. Rates depend on the vehicle tier and additional distance. Final pricing is shown in the app before booking.",
   },
   {
     q: "Does the app show the price before booking?",
@@ -209,7 +216,7 @@ const faqs = [
   },
   {
     q: "Are there additional charges beyond 5 km?",
-    a: "For door-to-door and pickup-to-branch bookings, additional-distance rates depend on the vehicle tier and start at ₱7/km for motorcycles. Branch-to-door delivery has no additional fee for the customer.",
+    a: "For door-to-door and pickup-to-branch bookings, additional-distance rates depend on the vehicle tier and start at ₱7/km for motorcycles, the same for Saver and Priority. Branch-to-door delivery has no additional fee for the customer.",
   },
   {
     q: "Can I pay through the app?",
@@ -323,9 +330,11 @@ export default function PricingPage() {
                   <p className="text-sm font-bold uppercase tracking-[0.16em] text-alin-white">
                     Estimated Delivery Fee
                   </p>
-                  <p className="mt-1 text-4xl font-black leading-none text-alin-white">₱70</p>
+                  <p className="mt-1 text-4xl font-black leading-none text-alin-white">
+                    {formatPeso(STARTING_FARE.saver)}
+                  </p>
                   <p className="mt-2 text-sm font-medium text-alin-muted">
-                    Door-to-Door within 5 km
+                    Saver · Priority {formatPeso(STARTING_FARE.priority)} · Door-to-Door within 5 km
                   </p>
                 </div>
                 <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-alin-gold text-alin-black shadow-[0_10px_30px_-12px_rgba(255,194,0,0.8)]">
@@ -365,7 +374,22 @@ export default function PricingPage() {
                   <card.icon className="size-6" aria-hidden />
                 </div>
                 <h3 className="mt-6 text-2xl font-black text-alin-white">{card.title}</h3>
-                <p className="mt-5 text-4xl font-black text-alin-gold">{card.price}</p>
+                {card.price ? (
+                  <p className="mt-5 text-4xl font-black text-alin-gold">{card.price}</p>
+                ) : (
+                  <dl className="mt-5 grid grid-cols-2 gap-3">
+                    {FARE_TIERS.map((tier) => (
+                      <div key={tier.id}>
+                        <dt className="text-xs font-bold uppercase tracking-[0.14em] text-alin-muted">
+                          {tier.label} from
+                        </dt>
+                        <dd className="text-4xl font-black text-alin-gold">
+                          {formatPeso(STARTING_FARE[tier.id])}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
                 <p className="mt-1 text-sm font-semibold text-alin-white">{card.subprice}</p>
                 <p className="mt-5 text-sm leading-6 text-alin-muted">{card.description}</p>
                 <ul className="mt-6 space-y-3">
@@ -390,16 +414,32 @@ export default function PricingPage() {
           <SectionHeader
             eyebrow="Distance-based pricing"
             title="Rates for every vehicle tier."
-            body="These base fares and additional-distance rates apply to both door-to-door delivery and pickup to an ALiN Branch."
+            body={`These base fares cover the first ${BASE_DISTANCE_KM} km and apply to both door-to-door delivery and pickup to an ALiN Branch. The additional-distance rate is the same for Saver and Priority.`}
           />
+          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            {FARE_TIERS.map((tier) => (
+              <div
+                key={tier.id}
+                className="rounded-2xl border border-alin-border bg-alin-black px-5 py-4"
+              >
+                <p className="text-sm font-black uppercase tracking-[0.14em] text-alin-gold">
+                  {tier.label}
+                </p>
+                <p className="mt-1 text-sm text-alin-white">{tier.description}</p>
+              </div>
+            ))}
+          </div>
           <GlassPanel className="mt-10 overflow-hidden p-0">
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[760px] text-sm">
+              <table className="w-full min-w-[880px] text-sm">
                 <thead className="bg-alin-gold text-left text-alin-black">
                   <tr>
                     <th className="p-4 font-black">Vehicle Tier</th>
-                    <th className="p-4 font-black">Base Fare</th>
-                    <th className="p-4 font-black">Additional Distance</th>
+                    <th className="p-4 font-black">Weight Limit</th>
+                    <th className="p-4 font-black">Size (L × W × H)</th>
+                    <th className="p-4 font-black">Saver · First {BASE_DISTANCE_KM} km</th>
+                    <th className="p-4 font-black">Priority · First {BASE_DISTANCE_KM} km</th>
+                    <th className="p-4 font-black">Beyond {BASE_DISTANCE_KM} km</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -407,7 +447,7 @@ export default function PricingPage() {
                     <tr key={row[0]} className="border-t border-alin-border">
                       {row.map((cell, index) => (
                         <td
-                          key={cell}
+                          key={index}
                           className={cn(
                             "p-4",
                             index === 0 ? "font-bold text-alin-white" : "text-alin-muted",

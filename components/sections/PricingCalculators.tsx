@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   CARGO_RATES,
+  FARE_TIERS,
   VEHICLE_RATES,
-  formatPesoRange,
+  formatPeso,
   type CargoRateId,
-  type FareRange,
+  type TieredFare,
   type VehicleTierId,
 } from "@/lib/pricing-calculator";
 
@@ -35,7 +36,7 @@ interface DoorEstimate {
   service: "door-to-door";
   distanceKm: number;
   distanceMethod: "road" | "estimated";
-  fare: FareRange;
+  fare: TieredFare;
 }
 
 interface BranchEstimate {
@@ -43,9 +44,9 @@ interface BranchEstimate {
   nearestBranch: { id: string; name: string; city: string };
   distanceKm: number;
   distanceMethod: "road" | "estimated";
-  pickupFare: FareRange;
+  pickupFare: TieredFare;
   cargoFare: number;
-  totalFare: FareRange;
+  totalFare: TieredFare;
   lane: "Within province" | "Cross province";
   branchToDoorFee: 0;
 }
@@ -257,7 +258,7 @@ function VehicleSelect({
       >
         {VEHICLE_RATES.map((vehicle) => (
           <option key={vehicle.id} value={vehicle.id}>
-            {vehicle.label}
+            {vehicle.label} — up to {vehicle.maxWeightKg.toLocaleString("en-PH")} kg
           </option>
         ))}
       </select>
@@ -300,7 +301,15 @@ function EstimateResult({ estimate }: { estimate: Estimate }) {
   return (
     <div className="mt-5 rounded-2xl bg-alin-gold p-5 text-alin-black" aria-live="polite">
       <p className="text-xs font-black uppercase tracking-[0.18em]">Estimated customer total</p>
-      <p className="mt-2 text-4xl font-black">{formatPesoRange(fare)}</p>
+      <dl className="mt-3 grid grid-cols-2 gap-3">
+        {FARE_TIERS.map((tier) => (
+          <div key={tier.id} className="bg-alin-black/10 rounded-xl p-3">
+            <dt className="text-xs font-black uppercase tracking-[0.14em]">{tier.label}</dt>
+            <dd className="mt-1 text-3xl font-black sm:text-4xl">{formatPeso(fare[tier.id])}</dd>
+            <dd className="mt-1 text-xs font-semibold">{tier.description}</dd>
+          </div>
+        ))}
+      </dl>
       {estimate.service === "door-to-door" ? (
         <p className="mt-2 text-sm font-semibold">
           Approx. {estimate.distanceKm} km door-to-door
@@ -312,10 +321,11 @@ function EstimateResult({ estimate }: { estimate: Estimate }) {
         <div className="mt-3 grid gap-1 text-sm font-semibold">
           <p>Nearest branch: {estimate.nearestBranch.name}</p>
           <p>
-            Pickup leg: {estimate.distanceKm} km · {formatPesoRange(estimate.pickupFare)}
+            Pickup leg: {estimate.distanceKm} km · Saver {formatPeso(estimate.pickupFare.saver)} ·
+            Priority {formatPeso(estimate.pickupFare.priority)}
           </p>
           <p>
-            Cargo ({estimate.lane.toLowerCase()}): ₱{estimate.cargoFare.toLocaleString("en-PH")}
+            Cargo ({estimate.lane.toLowerCase()}): {formatPeso(estimate.cargoFare)}
           </p>
           <p>Branch-to-door: Included · ₱0 additional customer fee</p>
         </div>

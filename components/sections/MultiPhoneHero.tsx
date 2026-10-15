@@ -5,6 +5,7 @@ import { StoreBadges } from "@/components/brand/StoreBadges";
 import { TrackPackageButton } from "@/components/brand/TrackPackageButton";
 import { PhoneFrame } from "@/components/brand/PhoneFrame";
 import { HeroIntro } from "@/components/motion/HeroIntro";
+import { FARE_TIERS, STARTING_FARE, formatPeso } from "@/lib/pricing-calculator";
 
 /**
  * Customer Home hero. Server component (HeroIntro is the only client island).
@@ -55,12 +56,10 @@ export function MultiPhoneHero() {
             <div className="hero-cta grid max-w-md grid-cols-2 gap-3 pt-2">
               <PricingPill
                 icon={<Building2 aria-hidden className="h-5 w-5" />}
-                amount="₱70"
                 label="Pickup-to-Branch"
               />
               <PricingPill
                 icon={<HomeIcon aria-hidden className="h-5 w-5" />}
-                amount="₱70"
                 label="Door-to-Door"
               />
             </div>
@@ -91,25 +90,21 @@ export function MultiPhoneHero() {
   );
 }
 
-function PricingPill({
-  icon,
-  amount,
-  label,
-}: {
-  icon: React.ReactNode;
-  amount: string;
-  label: string;
-}) {
+function PricingPill({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <div className="flex items-center gap-3 rounded-2xl border border-alin-gold/40 bg-alin-near-black/80 px-4 py-3 backdrop-blur">
       <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-alin-black text-alin-gold">
         {icon}
       </span>
       <div className="leading-tight">
-        <p className="text-xs uppercase tracking-wide text-alin-muted">Starts at</p>
-        <p className="flex items-baseline gap-1 text-base font-bold text-alin-white">
-          {amount}
-          <span className="text-xs font-normal text-alin-muted">{label}</span>
+        <p className="text-xs uppercase tracking-wide text-alin-muted">{label} from</p>
+        <p className="mt-1 flex flex-wrap gap-x-3 text-base font-bold text-alin-white">
+          {FARE_TIERS.map((tier) => (
+            <span key={tier.id} className="flex items-baseline gap-1">
+              {formatPeso(STARTING_FARE[tier.id])}
+              <span className="text-xs font-normal text-alin-muted">{tier.label}</span>
+            </span>
+          ))}
         </p>
       </div>
     </div>

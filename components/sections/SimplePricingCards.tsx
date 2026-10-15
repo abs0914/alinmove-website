@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Building2, Home, Check } from "lucide-react";
+import { FARE_TIERS, STARTING_FARE, formatPeso } from "@/lib/pricing-calculator";
 import { cn } from "@/lib/utils";
 
 type Variant = "door-to-door" | "pickup-to-branch";
@@ -9,8 +10,6 @@ const VARIANTS: Record<
   {
     title: string;
     icon: typeof Home;
-    fromLabel: string;
-    fromAmount: string;
     radius: string;
     bullets: string[];
   }
@@ -18,16 +17,12 @@ const VARIANTS: Record<
   "door-to-door": {
     title: "Door-to-Door Delivery",
     icon: Home,
-    fromLabel: "FROM",
-    fromAmount: "₱70",
     radius: "within 5 km",
-    bullets: ["Pickup at your door", "Up to 20 kg", "Live tracking", "Secure payment"],
+    bullets: ["Pickup at your door", "Motorcycle up to 25 kg", "Live tracking", "Secure payment"],
   },
   "pickup-to-branch": {
     title: "Pickup to ALiN Branch",
     icon: Building2,
-    fromLabel: "FROM",
-    fromAmount: "₱70",
     radius: "within 5 km",
     bullets: ["Drop off at any branch", "Pay at destination branch", "Live tracking", "Secure payment"],
   },
@@ -41,11 +36,17 @@ function PricingCard({ variant }: { variant: Variant }) {
       <header className="flex items-start justify-between gap-4">
         <div>
           <h3 className="text-lg font-semibold text-alin-white">{v.title}</h3>
-          <p className="mt-3 text-xs uppercase tracking-wide text-alin-muted">{v.fromLabel}</p>
-          <p className="mt-1 flex items-baseline gap-2 text-4xl font-bold text-alin-gold">
-            {v.fromAmount}
-            <span className="text-sm font-normal text-alin-muted">{v.radius}</span>
-          </p>
+          <dl className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
+            {FARE_TIERS.map((tier) => (
+              <div key={tier.id}>
+                <dt className="text-xs uppercase tracking-wide text-alin-muted">{tier.label} from</dt>
+                <dd className="mt-1 text-4xl font-bold text-alin-gold">
+                  {formatPeso(STARTING_FARE[tier.id])}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-1 text-sm text-alin-muted">{v.radius}</p>
         </div>
         <span
           aria-hidden
@@ -84,7 +85,8 @@ export function SimplePricingCards({
         <PricingCard variant="pickup-to-branch" />
       </div>
       <p className="text-xs text-alin-muted">
-        Final rates may vary by location, distance, and package size.
+        Saver is scheduled at a lower fare; Priority dispatches a rider right away. Final rates
+        may vary by location, distance, vehicle, and package size.
         {showLink ? (
           <>
             {" "}
