@@ -11,7 +11,8 @@ export function StickyDownloadBar() {
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
   const isTrackingPage = pathname === "/tracking" || pathname === "/track";
-  const enabled = showStickyDownloadBar() && !isTrackingPage;
+  // /download already shows every store badge.
+  const enabled = showStickyDownloadBar() && !isTrackingPage && pathname !== "/download";
 
   // Rider sub-tree shows the rider variant; everything else, the customer.
   const audience = pathname?.startsWith("/drive") ? "rider" : "customer";

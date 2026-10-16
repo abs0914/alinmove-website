@@ -51,12 +51,13 @@ export function storeUrl(audience: DownloadAudience, platform: StorePlatform): s
  * Canonical CTA helper. Both apps ship on iOS and Android.
  *
  * With a platform (store badges) it returns that store's listing. Without one
- * (generic "Download" buttons) it returns `/download`, which redirects phones
- * to the matching store by user-agent and shows both badges on desktop.
+ * (generic "Download" buttons) it returns `/download?intent=…`: phones are
+ * redirected to that app's store listing by user-agent, everyone else sees
+ * the download page. A bare `/download` always shows the page with both apps.
  */
 export function downloadHref(audience: DownloadAudience, platform?: StorePlatform): string {
   if (platform) return storeUrl(audience, platform);
-  return audience === "rider" ? "/download?intent=rider" : "/download";
+  return `/download?intent=${audience}`;
 }
 
 /** Customer secondary CTA — same in both modes. */

@@ -6,7 +6,7 @@
 
 The marketing & app-download site for **ALiN Move** — the digital delivery platform powered by **ALiN Cargo Express (ACE)**. Public domain: `alinmove.com`.
 
-The site ships in **live mode** by default. Both apps (ALiN Move customer + ALiN Move Driver) are live on the App Store and Google Play. Store badges link to the listings directly; generic "Download" buttons go to `/download`, which redirects phones to the matching store by user-agent and shows both badges on desktop. The `/waitlist` page remains as a fallback for visitors on unsupported platforms but is no longer a primary nav item or sticky bar.
+The site ships in **live mode** by default. Both apps (ALiN Move customer + ALiN Move Driver) are live on the App Store and Google Play. Store badges link to the listings directly; generic "Download" buttons go to `/download?intent=customer|rider`, which redirects phones to that app's store listing by user-agent. A bare `/download` (and desktop visitors) gets the dual-app download page with both apps' badges. The `/waitlist` page remains as a fallback for visitors on unsupported platforms but is no longer a primary nav item or sticky bar.
 
 ## North-star rules (non-negotiable)
 

@@ -31,6 +31,11 @@ export type EventName =
   | "store_badge_coming_soon_click"
   | "download_click_customer"
   | "download_click_rider"
+  // /download page store links — one event per app × platform
+  | "download_page_customer_ios_click"
+  | "download_page_customer_android_click"
+  | "download_page_driver_ios_click"
+  | "download_page_driver_android_click"
   | "track_package_click"
   | "public_tracking_submit"
   | "public_tracking_success"
