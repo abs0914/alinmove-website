@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
-import { MetaPixel } from "@/components/analytics/MetaPixel";
+import { MetaPixelPageViews } from "@/components/analytics/MetaPixel";
+import { META_PIXEL_ID, MetaPixelHead } from "@/components/analytics/MetaPixelHead";
 import { buildMetadata } from "@/lib/seo";
 import "./globals.css";
 
@@ -23,10 +24,13 @@ export const metadata: Metadata = buildMetadata({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <head>
+        <MetaPixelHead />
+      </head>
       <body suppressHydrationWarning>
         {children}
         <Analytics />
-        <MetaPixel />
+        {META_PIXEL_ID ? <MetaPixelPageViews /> : null}
         <Script
           src="https://chat.alinmove.com/widget/widget.js"
           data-tenant="alin"
