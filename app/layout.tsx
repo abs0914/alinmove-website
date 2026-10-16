@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
+import { MetaPixel } from "@/components/analytics/MetaPixel";
 import { buildMetadata } from "@/lib/seo";
 import "./globals.css";
 
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body suppressHydrationWarning>
         {children}
         <Analytics />
+        <MetaPixel />
         <Script
           src="https://chat.alinmove.com/widget/widget.js"
           data-tenant="alin"
